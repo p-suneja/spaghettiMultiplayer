@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Networking;
+using UnityEngine.Networking.Match;
+using System.Collections.Generic;
 
 namespace Prototype.NetworkLobby
 {
@@ -41,7 +44,7 @@ namespace Prototype.NetworkLobby
             //lobbyManager.backDelegate = lobbyManager.StopClientClbk;
             //lobbyManager.DisplayIsConnecting();
 
-            lobbyManager.SetServerInfo("Connecting...", lobbyManager.networkAddress);
+            //lobbyManager.SetServerInfo("Connecting...", lobbyManager.networkAddress);
         }
 
         public void OnClickDedicated()
@@ -51,7 +54,7 @@ namespace Prototype.NetworkLobby
 
             //lobbyManager.backDelegate = lobbyManager.StopServerClbk;
 
-            lobbyManager.SetServerInfo("Dedicated Server", lobbyManager.networkAddress);
+            //lobbyManager.SetServerInfo("Dedicated Server", lobbyManager.networkAddress);
         }
 
         public void OnClickCreateMatchmakingGame()
@@ -76,6 +79,16 @@ namespace Prototype.NetworkLobby
             lobbyManager.StartMatchMaker();
             //lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
             //lobbyManager.ChangeTo(lobbyServerList);
+        }
+        public void JoinGame()
+        {
+            lobbyManager.matchMaker.ListMatches(0, 1, "", true, 0, 0, OnGUIMatchList);
+        }
+
+        public void OnGUIMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
+        {
+            lobbyManager.matchMaker.JoinMatch( matches[0].networkId, "", "", "", 0, 0, lobbyManager.OnMatchJoined);
+
         }
 
         void onEndEditIP(string text)
